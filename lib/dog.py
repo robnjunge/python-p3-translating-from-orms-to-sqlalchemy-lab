@@ -1,22 +1,35 @@
-from models import Dog
+from sqlalchemy import Column, Integer, String
+from sqlalchemy.ext.declarative import declarative_base
 
-def create_table(base):
-    pass
+Base = declarative_base()
+
+class Dog(Base):
+    __tablename__ = 'dogs'
+
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    breed = Column(String)
+
+def create_table(base, engine):
+    base.metadata.create_all(engine)
+
 
 def save(session, dog):
-    pass
+    session.add(dog)
+    session.commit()
 
 def get_all(session):
-    pass
+    return session.query(Dog).all()
 
 def find_by_name(session, name):
-    pass
+    return session.query(Dog).filter_by(name=name).first()
 
 def find_by_id(session, id):
-    pass
+    return session.get(Dog, id)
 
 def find_by_name_and_breed(session, name, breed):
-    pass
+    return session.query(Dog).filter_by(name=name, breed=breed).first()
 
 def update_breed(session, dog, breed):
-    pass
+    dog.breed = breed
+    session.commit()
